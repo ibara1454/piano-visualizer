@@ -18,6 +18,11 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'no-debugger': 'off',
+    'prefer-destructuring': 'off',
+    'no-useless-constructor': 'off',
+    'class-methods-use-this': 'warn',
+    'no-empty-function': 'warn',
+    'class-methods-use-this': 'warn',
   },
 
   'extends': [
