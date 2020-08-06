@@ -11,9 +11,10 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType, reactive,
+  defineComponent, PropType,
 } from '@vue/composition-api';
 import { intersect } from '@/utils';
+import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
 
 const keyData = [
   { clazz: 'white', key: 'A0', keyId: '21' },
@@ -110,14 +111,23 @@ export default defineComponent({
   name: 'VisualPiano',
 
   props: {
-    pressed: { type: Array as PropType<string[]>, required: false, default: () => [] },
+    pressed: {
+      type: Array as PropType<Array<string | number | MIDIKeyTouch>>,
+      required: false,
+      default: () => [],
+    },
   },
 
   setup(props) {
-    const state = reactive({ keyData });
-
-    const isPressed = (xs: string[]): boolean => intersect(xs, props.pressed).length !== 0;
-    return { ...state, isPressed };
+    const isPressed = (xs: string[]): boolean => {
+      const ys: string[] = props.pressed.map((key) => {
+        if (typeof key === 'string') { return key; }
+        if (typeof key === 'number') { return key.toString(); }
+        return key.note.toString();
+      });
+      return intersect(xs, ys).length !== 0;
+    };
+    return { keyData, isPressed };
   },
 });
 </script>
@@ -126,9 +136,11 @@ export default defineComponent({
 $white-key-width: 20px;
 $white-key-height: 100px;
 $white-border-radius: 3px;
-$black-key-width: 16px;
-$black-key-height: 70px;
+$black-key-width: 13px;
+$black-key-height: 65px;
 $black-border-radius: 3px;
+$border-size: 1px;
+$pressed-color: rgb(18, 150, 190);
 
 @function offset($index) {
   $quot: floor($index / 12);
@@ -166,7 +178,7 @@ $black-border-radius: 3px;
 
 .key {
   position: absolute;
-  border: 1px solid black;
+  border: $border-size solid black;
   box-sizing: border-box;
   display: inline-block;
 
@@ -183,11 +195,25 @@ $black-border-radius: 3px;
     border-radius: $black-border-radius;
     z-index: 1;
     background: black;
-    transform: translateY(-$black-key-height / 4.0) translateX(-$black-key-width / 2.0);
+    transform: translateY(-2px) translateX(-$black-key-width / 2.0);
+
+    &::before {
+      content: '';
+      width: inherit;
+      height: inherit;
+      display: block;
+      box-shadow:
+        1px 1px 0.5px 0px rgba(0, 0, 0, 0.8),
+        2px 2px 2px 0px rgba(0, 0, 0, 0.4);
+      border-radius: $black-border-radius;
+      // TODO: Remove this transform workaround.
+      transform: translateY(-$border-size) translateX(-$border-size);
+    }
   }
 
   &.pressed {
-    background: purple;
+    background: $pressed-color;
+    transition: all 0.15s;
   }
 
   @for $i from 0 to 88 {
@@ -196,9 +222,6 @@ $black-border-radius: 3px;
 
     $offset-x: offset($i) * $white-key-width + $quot * 7 * $white-key-width;
 
-    // &[data-keyid="#{$i + 1}"] {
-    //   left: $offset-x;
-    // }
     &:nth-child(#{$i + 1}) {
       left: $offset-x;
     }

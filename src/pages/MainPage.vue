@@ -5,7 +5,7 @@
         {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
       </li>
     </ul>
-    <VisualPiano :pressed="pressed.keys.map((key) => key.note.toString())" />
+    <VisualPiano :pressed="pressed.keys" />
   </div>
 </template>
 
