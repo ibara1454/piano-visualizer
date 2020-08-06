@@ -142,47 +142,19 @@ $black-border-radius: 3px;
 $border-size: 1px;
 $pressed-color: rgb(18, 150, 190);
 
-@function offset($index) {
-  $quot: floor($index / 12);
-  $rem: $index % 12;
-  @if $rem == 0 {
-    @return 0;
-  } @else if $rem == 1 {
-    @return 1;
-  } @else if $rem == 2 {
-    @return 1;
-  } @else if $rem == 3 {
-    @return 2;
-  } @else if $rem == 4 {
-    @return 3;
-  } @else if $rem == 5 {
-    @return 3;
-  } @else if $rem == 6 {
-    @return 4;
-  } @else if $rem == 7 {
-    @return 4;
-  } @else if $rem == 8 {
-    @return 5;
-  } @else if $rem == 9 {
-    @return 6;
-  } @else if $rem == 10 {
-    @return 6;
-  } @else { // $rem == 11
-    @return 7;
-  }
-}
-
 .panel {
-  background: green;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .key {
-  position: absolute;
   border: $border-size solid black;
   box-sizing: border-box;
   display: inline-block;
 
   &.white {
+    position: relative;
     width: $white-key-width;
     height: $white-key-height;
     border-radius: $white-border-radius;
@@ -190,6 +162,7 @@ $pressed-color: rgb(18, 150, 190);
     background: white;
   }
   &.black {
+    position: absolute;
     width: $black-key-width;
     height: $black-key-height;
     border-radius: $black-border-radius;
@@ -214,17 +187,6 @@ $pressed-color: rgb(18, 150, 190);
   &.pressed {
     background: $pressed-color;
     transition: all 0.15s;
-  }
-
-  @for $i from 0 to 88 {
-    $quot: floor($i / 12);
-    $rem: $i % 12;
-
-    $offset-x: offset($i) * $white-key-width + $quot * 7 * $white-key-width;
-
-    &:nth-child(#{$i + 1}) {
-      left: $offset-x;
-    }
   }
 }
 </style>
