@@ -5,7 +5,7 @@
         {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
       </li>
     </ul>
-    <VisualPiano :pressed="pressed.keys" />
+    <VisualPiano :pressed="state.pressed" />
   </div>
 </template>
 
@@ -14,7 +14,6 @@ import {
   defineComponent,
   inject,
   watchEffect,
-  computed,
 } from '@vue/composition-api';
 import VisualPiano from '@/components/VisualPiano.vue';
 import MIDIDeviceStore from '@/stores/MIDIDeviceStore';
@@ -33,12 +32,7 @@ export default defineComponent({
       onInvalidate(() => store.disconnect());
     });
 
-    // eslint-disable-next-line arrow-body-style
-    const pressed = computed(() => {
-      return store.state.activeDevice ? store.state.activeDevice.state : { keys: [] };
-    });
     return {
-      pressed,
       state,
     };
   },

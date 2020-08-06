@@ -1,4 +1,5 @@
 import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
+import { Observable } from 'rxjs';
 
 export interface MIDIDevice {
   readonly id: string;
@@ -14,8 +15,7 @@ export interface MIDIDevice {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MIDIInputDevice extends MIDIDevice {
-  state: {
-    keys: MIDIKeyTouch[];
-    pedal: boolean;
-  }
+  keys: Observable<MIDIKeyTouch[]>;
+
+  pedal: Observable<boolean>;
 }

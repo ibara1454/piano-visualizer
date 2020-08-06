@@ -4,15 +4,16 @@ import {
   MIDIMessage, channelMask, noteOn, noteOff, damperPedal, pedalOffThreshold,
 } from '@/models/MIDIMessage';
 import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
-import { reactive } from '@vue/composition-api';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 export default class MIDIKeyboardDevice implements MIDIInputDevice {
-  // TODO: implement this reactive state without Vue.js.
-  //  Since this class is not a part of Vue's component.
-  public state = reactive({
-    keys: [] as MIDIKeyTouch[],
-    pedal: false,
-  })
+  #keys = new BehaviorSubject<MIDIKeyTouch[]>([]);
+
+  #pedal = new BehaviorSubject<boolean>(false);
+
+  get keys(): Observable<MIDIKeyTouch[]> { return this.#keys.asObservable(); }
+
+  get pedal(): Observable<boolean> { return this.#pedal.asObservable(); }
 
   private listener: EventListener = (event: Event) => {
     const e = event as WebMidi.MIDIMessageEvent;
@@ -24,26 +25,25 @@ export default class MIDIKeyboardDevice implements MIDIInputDevice {
     // If the head part matches the "NOTE_ON" pattern.
     if ((first & ~channelMask) === noteOn) {
       // If the same note exists, then replace it by the new one.
-      // TODO: implementation
-      if (!this.state.keys.map((key) => key.note).includes(second)) {
-        this.state.keys = [...this.state.keys, { note: second, velocity: third }];
+      if (!this.#keys.getValue().map((key) => key.note).includes(second)) {
+        const value = [...this.#keys.getValue(), { note: second, velocity: third }];
+        this.#keys.next(value);
       }
       // If the head part matches the "NOTE_OFF" pattern.
     } else if ((first & ~channelMask) === noteOff) {
       // Remove the note from list.
-      this.state.keys = this.state.keys.filter((key) => key.note !== second);
+      const value = this.#keys.getValue().filter((key) => key.note !== second);
+      this.#keys.next(value);
       // If the head part matches the "DAMPER_PEDAL" pattern.
     } else if ((first & damperPedal) === damperPedal) {
       // Use the tail part to determine whether it is "PEDAL_ON" or "PEDAL_OFF".
       if (second <= pedalOffThreshold) {
-        this.state.pedal = false;
+        this.#pedal.next(false);
       } else { // second >= pedalOnThreshold
-        this.state.pedal = true;
+        this.#pedal.next(true);
       }
     }
     // Discard the note if it does not match any pattern from the above.
-
-    console.log(this.state.keys);
   }
 
   private attached = false;
@@ -59,6 +59,8 @@ export default class MIDIKeyboardDevice implements MIDIInputDevice {
    */
   attach(): void {
     if (this.attached === false) {
+      this.#keys = new BehaviorSubject<MIDIKeyTouch[]>([]);
+      this.#pedal = new BehaviorSubject<boolean>(false);
       this.device.addEventListener('midimessage', this.listener);
       this.attached = true;
     }
@@ -70,6 +72,8 @@ export default class MIDIKeyboardDevice implements MIDIInputDevice {
   distatch(): void {
     if (this.attached === true) {
       this.device.removeEventListener('midimessage', this.listener);
+      this.#keys.complete();
+      this.#pedal.complete();
       this.attached = false;
     }
   }
