@@ -46,6 +46,7 @@ export default class MIDIDeviceStore {
     if (!('requestMIDIAccess' in navigator)) {
       // Handle errors when web MIDI api not available on this browser.
       this.state.error = 'Your browser does not support Web MIDI';
+      return;
     }
     if (this.midiAccess === undefined) {
       // Connect and request all MIDI devices.
