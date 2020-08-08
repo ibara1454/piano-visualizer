@@ -1,4 +1,6 @@
-# piano-visualizer
+<p align="center"><a href="https://ibara1454.github.io/piano-visualizer/dist/" target="_blank" rel="noopener noreferrer"><img width="196" src="image.png" alt="logo"></a></p>
+
+<a href="https://ibara1454.github.io/piano-visualizer/dist/" target="_blank" rel="noopener noreferrer"><h1>piano-visualizer</h1></a>
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d8d4b51330e64dbba17df8954c56f1c3)](https://www.codacy.com/manual/ibara1454/piano-visualizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibara1454/piano-visualizer&amp;utm_campaign=Badge_Grade)
 [![GitHub Actions](https://github.com/ibara1454/piano-visualizer/workflows/build/badge.svg)](https://github.com/ibara1454/piano-visualizer/actions?query=workflow%3Abuild)
@@ -22,6 +24,8 @@ open the following link with Google Chrome. Please make sure your Google Chrome'
 [piano-visualizer](https://ibara1454.github.io/piano-visualizer/dist/)
 
 Since Piano Visualizer is a PWA, you can also install it by pressing the install button on the navigation bar.
+
+![Install](install.png)
 
 ## Contributing
 
