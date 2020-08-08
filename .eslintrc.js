@@ -22,12 +22,5 @@ module.exports = {
     'no-useless-constructor': 'off',
     'class-methods-use-this': 'warn',
     'no-empty-function': 'warn',
-    'class-methods-use-this': 'warn',
   },
-
-  'extends': [
-    'plugin:vue/essential',
-    '@vue/airbnb',
-    '@vue/typescript/recommended'
-  ]
 };
