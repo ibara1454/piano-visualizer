@@ -8,7 +8,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
   DIST_DIR: dist
-  PUBLIC_PATH: piano-visualizer/dist # Use this path to override the default setting in vue.config.js
+  PUBLIC_PATH: /piano-visualizer/dist # Use this path to override the default setting in vue.config.js
   AUTHOR_NAME: ibara1454
   AUTHOR_EMAIL: ibara1454@gmail.com
 
