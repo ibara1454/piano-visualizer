@@ -1,0 +1,70 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+  DIST_DIR: dist
+  PUBLIC_PATH: piano-visualizer/dist # Use this path to override the default setting in vue.config.js
+  AUTHOR_NAME: ibara1454
+  AUTHOR_EMAIL: ibara1454@gmail.com
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout latest repository
+      uses: actions/checkout@v2
+
+    - name: Use Node.js 11.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 11.x
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    # Save and restore from caches
+    # For more information,
+    # see: https://stackoverflow.com/a/62244232
+    - name: Cache yarn cache
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ hashFiles('**/package.json') }}-
+          ${{ runner.os }}-
+
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+
+    - name: Run lint
+      run: yarn run lint
+
+    - name: Run production build
+      run: yarn run build
+
+    - name: Upload built files
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: ${{ env.DIST_DIR }}
+
+    # Push the distribution to the gh-pages branch.
+    # See https://github.com/EndBug/add-and-commit
+    - name: Update gh-pages branch
+      uses: EndBug/add-and-commit@v4.4.0
+      with:
+        add: ${{ env.DIST_DIR }}
+        author_name: ${{ env.AUTHOR_NAME }}
+        author_email: ${{ env.AUTHOR_EMAIL }}
+        ref: 'gh-pages'
+        message: ':sparkles: update gh-pages'

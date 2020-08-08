@@ -1,6 +1,7 @@
 # piano-visualizer
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d8d4b51330e64dbba17df8954c56f1c3)](https://www.codacy.com/manual/ibara1454/piano-visualizer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ibara1454/piano-visualizer&amp;utm_campaign=Badge_Grade)
+[![GitHub Actions](https://github.com/ibara1454/piano-visualizer/workflows/build/badge.svg)](https://github.com/ibara1454/piano-visualizer/actions?query=workflow%3Abuild)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Piano Visualizer is a visualization tool for displaying what you are playing on your MIDI keyboard device.
