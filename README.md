@@ -9,7 +9,7 @@ Piano Visualizer is a visualization tool for displaying what you are playing on 
 The application doesn't need additional libraries and installations.
 All you have to do is open your browser, and plug in your MIDI keyboard.
 
-This repository is inspired by [wiwikuan/PianoVisualizer](https://github.com/wiwikuan/PianoVisualizer).
+This project is inspired by [wiwikuan/PianoVisualizer](https://github.com/wiwikuan/PianoVisualizer).
 
 :construction: Note that this project is still work in progress.
 
