@@ -67,4 +67,7 @@ jobs:
         author_name: ${{ env.AUTHOR_NAME }}
         author_email: ${{ env.AUTHOR_EMAIL }}
         ref: 'gh-pages'
+        # Whether to use the --force option on `git add`, in order to bypass eventual gitignores
+        # Default: false
+        force: true
         message: ':sparkles: update gh-pages'
