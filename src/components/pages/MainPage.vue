@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HeaderMenu />
     <ul v-if="state.devices.length !== 0">
       <li v-for="device in state.devices" :key="device.id">
         {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
@@ -15,13 +16,14 @@ import {
   inject,
   watchEffect,
 } from '@vue/composition-api';
-import VisualPiano from '@/components/VisualPiano.vue';
+import HeaderMenu from '@/components/organisms/HeaderMenu.vue';
+import VisualPiano from '@/components/organisms/VisualPiano.vue';
 import MIDIDeviceStore from '@/stores/MIDIDeviceStore';
 
 export default defineComponent({
   name: 'MainPage',
 
-  components: { VisualPiano },
+  components: { HeaderMenu, VisualPiano },
 
   setup() {
     const store = inject(MIDIDeviceStore.key) as MIDIDeviceStore;
