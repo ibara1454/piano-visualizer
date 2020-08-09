@@ -43,7 +43,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-@import "~@/components/styles/colors";
+@import '~@/components/styles/colors';
+@import '~@/components/styles/fonts';
 
 .app {
   position: absolute;
@@ -57,6 +58,7 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $reverse-color;
+  font-family: 'Roboto', sans-serif;
 }
 
 .frame {

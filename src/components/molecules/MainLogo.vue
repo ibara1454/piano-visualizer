@@ -17,6 +17,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+@import '~@/components/styles/fonts';
+
 .container {
   display: flex;
   justify-content: center;
@@ -26,5 +28,6 @@ export default defineComponent({
 .title {
   padding: 0 20px;
   font-size: 1.5rem;
+  font-family: 'Kaushan Script', cursive;
 }
 </style>

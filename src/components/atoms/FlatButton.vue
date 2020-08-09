@@ -27,7 +27,8 @@ export default defineComponent({
   padding: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
