@@ -1,5 +1,5 @@
 <template>
-  <button :class="$style.button">
+  <button :class="$style.button" :disabled="disabled">
     <slot>
     </slot>
   </button>
@@ -9,6 +9,14 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
+  props: {
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+
   name: 'FlatButton',
 });
 </script>
@@ -42,6 +50,11 @@ export default defineComponent({
 
   &:active {
     background: $accent-color;
+  }
+
+  &:disabled {
+    background: $primary-color;
+    color: $disabled-color;
   }
 }
 </style>

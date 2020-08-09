@@ -15,7 +15,8 @@
       </template>
     </FlatButton>
 
-    <FlatButton :class="[$style.button, $style.settings]">
+    <!-- TODO: implements setting menu. -->
+    <FlatButton :class="[$style.button, $style.settings]" disabled="disabled">
       <SmallIcon :icon="faCog" />
       <p>Settings</p>
     </FlatButton>
