@@ -53,4 +53,8 @@ export default defineComponent({
   padding: 5px 0;
 }
 
+.button > * {
+  padding: 0 5px;
+}
+
 </style>

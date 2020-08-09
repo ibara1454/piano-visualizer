@@ -24,8 +24,8 @@ export default defineComponent({
   outline: 0;
   min-height: 40px;
   min-width: 120px;
-  padding: 10px 20px;
-  letter-spacing: 1.2px;
+  padding: 10px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   font-weight: 500;
   display: flex;
