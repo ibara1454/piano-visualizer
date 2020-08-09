@@ -3,12 +3,12 @@
     <MainLogo />
 
     <FlatButton :class="[$style.button]">
-      <span>Icon</span>
+      <SmallIcon :icon="faPlug" />
       <p>No device</p>
     </FlatButton>
 
     <FlatButton :class="[$style.button]">
-      <span>Icon</span>
+      <SmallIcon :icon="faCog" />
       <p>Settings</p>
     </FlatButton>
   </div>
@@ -19,17 +19,21 @@ import { defineComponent, inject } from '@vue/composition-api';
 import MIDIDeviceStore from '@/stores/MIDIDeviceStore';
 import PageFrame from '@/components/atoms/PageFrame.vue';
 import FlatButton from '@/components/atoms/FlatButton.vue';
+import SmallIcon from '@/components/atoms/SmallIcon.vue';
+import { faPlug, faCog } from '@fortawesome/free-solid-svg-icons';
 import MainLogo from '@/components/molecules/MainLogo.vue';
 
 export default defineComponent({
   name: 'HeaderMenu',
 
-  components: { PageFrame, FlatButton, MainLogo },
+  components: {
+    PageFrame, FlatButton, SmallIcon, MainLogo,
+  },
 
   setup() {
     const store = inject(MIDIDeviceStore.key) as MIDIDeviceStore;
     const { state } = store;
-    return { state };
+    return { state, faPlug, faCog };
   },
 });
 </script>
