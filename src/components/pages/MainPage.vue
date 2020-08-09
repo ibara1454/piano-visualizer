@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <HeaderMenu />
-    <ul v-if="state.devices.length !== 0">
+  <div :class="$style.page">
+    <!-- <ul v-if="state.devices.length !== 0">
       <li v-for="device in state.devices" :key="device.id">
         {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
       </li>
-    </ul>
+    </ul> -->
     <VisualPiano :pressed="state.pressed" />
   </div>
 </template>
@@ -16,14 +15,13 @@ import {
   inject,
   watchEffect,
 } from '@vue/composition-api';
-import HeaderMenu from '@/components/organisms/HeaderMenu.vue';
 import VisualPiano from '@/components/organisms/VisualPiano.vue';
 import MIDIDeviceStore from '@/stores/MIDIDeviceStore';
 
 export default defineComponent({
   name: 'MainPage',
 
-  components: { HeaderMenu, VisualPiano },
+  components: { VisualPiano },
 
   setup() {
     const store = inject(MIDIDeviceStore.key) as MIDIDeviceStore;
@@ -41,6 +39,11 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss" module>
+@import '~@/components/styles/colors';
 
+.page {
+  padding: 40px 20px;
+  background: $theme-color;
+}
 </style>
