@@ -6,6 +6,7 @@
     </PageFrame>
 
     <portal to="dialog">
+      <!-- TODO: implements dialogs -->
       <template v-if="false">
         <div class="fullscreen">
           <div class="veil">
