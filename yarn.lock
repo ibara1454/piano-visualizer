@@ -6400,6 +6400,11 @@ pnp-webpack-plugin@^1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.npm.taobao.org/portal-vue/download/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha1-6ggGmyW2QMoIpbhvZ8YS8V9OStQ=
+
 portfinder@^1.0.26:
   version "1.0.28"
   resolved "https://registry.npm.taobao.org/portfinder/download/portfinder-1.0.28.tgz?cache=0&sync_timestamp=1596019937934&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fportfinder%2Fdownload%2Fportfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"
@@ -7260,14 +7265,7 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxjs@^6.6.0:
-  version "6.6.2"
-  resolved "https://registry.npm.taobao.org/rxjs/download/rxjs-6.6.2.tgz?cache=0&sync_timestamp=1596158717418&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frxjs%2Fdownload%2Frxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
-  integrity sha1-gJanrAPyzE/lhg725XKBDZ4BwNI=
-  dependencies:
-    tslib "^1.9.0"
-
-rxjs@^6.6.2:
+rxjs@^6.6.0, rxjs@^6.6.2:
   version "6.6.2"
   resolved "https://registry.npm.taobao.org/rxjs/download/rxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
   integrity sha1-gJanrAPyzE/lhg725XKBDZ4BwNI=
