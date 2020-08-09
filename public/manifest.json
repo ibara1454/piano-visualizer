@@ -50,12 +50,6 @@
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src":"./img/icons/icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
   "start_url": ".",
