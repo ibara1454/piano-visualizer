@@ -2,7 +2,7 @@
   <div :class="[$style.menu]">
     <MainLogo />
 
-    <FlatButton :class="[$style.button]">
+    <FlatButton :class="[$style.button, $style.device]">
       <!-- Shows "NO DEVICE" when no device detected. -->
       <template v-if="state.activeDevice === undefined">
         <SmallIcon :icon="faPlug" />
@@ -15,7 +15,7 @@
       </template>
     </FlatButton>
 
-    <FlatButton :class="[$style.button]">
+    <FlatButton :class="[$style.button, $style.settings]">
       <SmallIcon :icon="faCog" />
       <p>Settings</p>
     </FlatButton>
@@ -56,15 +56,9 @@ export default defineComponent({
   display: flex;
 }
 
-.center {
-  justify-content: center;
-  align-items: center;
-}
-
 .menu {
   background: black;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 5px 0;
 }
@@ -77,4 +71,12 @@ export default defineComponent({
   height: 1.5em;
 }
 
+.device, .settings {
+  margin: 0 5px;
+}
+
+.device {
+  // Align right
+  margin-left: auto;
+}
 </style>
