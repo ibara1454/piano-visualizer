@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, PropType,
+  defineComponent, PropType, reactive, watch,
 } from '@vue/composition-api';
 import { intersect } from '@/utils';
 import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
@@ -116,18 +116,41 @@ export default defineComponent({
       required: false,
       default: () => [],
     },
+
+    pedal: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
 
   setup(props) {
+    const state = reactive({
+      pressed: [] as Array<string | number | MIDIKeyTouch>,
+    });
+
+    watch(() => [props.pressed, props.pedal], ([pressed, pedal]) => {
+      // The workaround for getting correct type from mixed array.
+      const lPressed = pressed as Array<string | number | MIDIKeyTouch>;
+      const lPedal = pedal as boolean;
+      if (lPedal) {
+        state.pressed = [...state.pressed, ...lPressed];
+      } else {
+        state.pressed = lPressed;
+      }
+    });
+
     const isPressed = (xs: string[]): boolean => {
-      const ys: string[] = props.pressed.map((key) => {
+      const ys: string[] = state.pressed.map((key) => {
         if (typeof key === 'string') { return key; }
         if (typeof key === 'number') { return key.toString(); }
         return key.note.toString();
       });
       return intersect(xs, ys).length !== 0;
     };
-    return { keyData, isPressed };
+    return {
+      state, keyData, isPressed,
+    };
   },
 });
 </script>

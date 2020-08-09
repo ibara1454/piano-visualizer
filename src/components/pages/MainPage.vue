@@ -5,7 +5,7 @@
         {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
       </li>
     </ul> -->
-    <VisualPiano :pressed="state.pressed" />
+    <VisualPiano :pressed="state.pressed" :pedal="state.pedal" />
   </div>
 </template>
 
