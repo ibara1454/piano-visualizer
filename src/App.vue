@@ -2,7 +2,7 @@
   <div :class="$style.app">
     <PageFrame :class="$style.frame">
       <HeaderMenu />
-      <MainPage />
+      <MainPage :class="$style.page" />
     </PageFrame>
 
     <portal to="dialog">
@@ -66,6 +66,10 @@ export default defineComponent({
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.page {
+  margin: 20px 0;
 }
 
 .destination {
