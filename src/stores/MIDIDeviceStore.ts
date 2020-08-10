@@ -46,7 +46,7 @@ export default class MIDIDeviceStore {
     // Only call the api if it exists.
     if (!('requestMIDIAccess' in navigator)) {
       // Handle errors when web MIDI api not available on this browser.
-      this.state.error = 'Your browser does not support Web MIDI';
+      this.state.error = 'Unsupported browser detected. Please use the latest Google Chrome.';
       return;
     }
     // Request midi access only if it is not initialized.
@@ -66,10 +66,8 @@ export default class MIDIDeviceStore {
           // Which means that existing devices will not trigger the connection evnet.
           this.midiAccess.addEventListener('statechange', this.listener);
         })
-        .catch((error) => {
-          // TODO: Better error handling.
-          console.error(error);
-          this.state.error = error;
+        .catch(() => {
+          this.state.error = 'Unexpected error occurred.';
         });
     }
   }

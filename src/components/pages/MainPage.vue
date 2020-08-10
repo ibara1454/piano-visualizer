@@ -1,11 +1,16 @@
 <template>
   <div :class="$style.page">
-    <!-- <ul v-if="state.devices.length !== 0">
-      <li v-for="device in state.devices" :key="device.id">
-        {{ device.id }} - {{ device.name }} - {{ device.manufacturer }}
-      </li>
-    </ul> -->
-    <VisualPiano :pressed="state.pressed" :pedal="state.pedal" />
+    <!-- Error message -->
+    <div v-if="state.error">
+      <AlertMessage
+        warning
+        :message="state.error">
+      </AlertMessage>
+    </div>
+
+    <PageBlock>
+      <VisualPiano :pressed="state.pressed" :pedal="state.pedal" />
+    </PageBlock>
   </div>
 </template>
 
@@ -15,13 +20,15 @@ import {
   inject,
   watchEffect,
 } from '@vue/composition-api';
+import AlertMessage from '@/components/atoms/AlertMessage.vue';
+import PageBlock from '@/components/atoms/PageBlock.vue';
 import VisualPiano from '@/components/organisms/VisualPiano.vue';
 import MIDIDeviceStore from '@/stores/MIDIDeviceStore';
 
 export default defineComponent({
   name: 'MainPage',
 
-  components: { VisualPiano },
+  components: { AlertMessage, PageBlock, VisualPiano },
 
   setup() {
     const store = inject(MIDIDeviceStore.key) as MIDIDeviceStore;
@@ -40,10 +47,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-@import '~@/components/styles/colors';
+@import "~@/components/styles/sizes";
 
-.page {
-  padding: 40px 20px;
-  background: $theme-color;
+.page > * {
+  margin: $medium-space 0;
 }
 </style>
