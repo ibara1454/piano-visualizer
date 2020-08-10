@@ -13,7 +13,6 @@ export interface MIDIDevice {
   distatch(): void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MIDIInputDevice extends MIDIDevice {
   keys: Observable<MIDIKeyTouch[]>;
 

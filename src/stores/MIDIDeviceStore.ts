@@ -4,6 +4,7 @@ import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
 import { MIDIInputDevice } from '@/models/MIDIInputDevice';
 
 export default class MIDIDeviceStore {
+  // The key for injection.
   static key = Symbol('PianoStore');
 
   public state = reactive({
@@ -24,13 +25,9 @@ export default class MIDIDeviceStore {
   private listener: EventListener = (event: Event) => {
     const e = event as WebMidi.MIDIConnectionEvent;
     const { port } = e;
+    // The device may be "input" or "output". We only need the "input" device.
     if (port.type !== 'input') { return; }
-    const device = new MIDIKeyboardDevice(
-      port.id,
-      port.name || 'unknown',
-      port.manufacturer || 'unknown',
-      port as WebMidi.MIDIInput,
-    );
+    const device = MIDIKeyboardDevice.create(port as WebMidi.MIDIInput);
     if (e.port.state === 'connected') {
       this.onDeviceConnect(device);
     } else {
@@ -40,6 +37,7 @@ export default class MIDIDeviceStore {
 
   /**
    * Connect to the web MIDI APIs and listen for the device change events.
+   * Note that the request is asynchronous and may fail if the browser is not supported.
    */
   connect(): void {
     // Only call the api if it exists.
@@ -48,28 +46,18 @@ export default class MIDIDeviceStore {
       this.state.error = 'Your browser does not support Web MIDI';
       return;
     }
+    // Request midi access only if it is not initialized.
     if (this.midiAccess === undefined) {
       // Connect and request all MIDI devices.
       navigator.requestMIDIAccess({ sysex: true })
         .then((midiAccess) => {
+          // Initialize midi access.
           this.midiAccess = midiAccess;
-          // Get the connected devices.
+          // Get the input device list.
           const devices = Array.from(midiAccess.inputs.values())
-            .map((input) => new MIDIKeyboardDevice(
-              input.id,
-              input.name || 'unknown',
-              input.manufacturer || 'unknown',
-              input,
-            ));
-          this.state.devices = devices;
-          // If the device list is not empty, then let the first device to be the activeDevice.
-          if (devices.length !== 0 && this.state.activeDevice === undefined) {
-            const device = this.state.devices[0];
-            device.attach();
-            device.keys.subscribe((keys) => { this.state.pressed = keys; });
-            device.pedal.subscribe((pedal) => { this.state.pedal = pedal; });
-            this.state.activeDevice = device;
-          }
+            .map(MIDIKeyboardDevice.create);
+          // Connect all devices.
+          devices.forEach((device) => this.onDeviceConnect(device));
           // Add event listener for listening devices change.
           // Note that this listener only listens realtime events.
           // Which means that existing devices will not trigger the connection evnet.
@@ -80,40 +68,6 @@ export default class MIDIDeviceStore {
           console.error(error);
           this.state.error = error;
         });
-    }
-  }
-
-  /**
-   * The callback function for new device connected.
-   * @param device The new MIDI device.
-   */
-  private onDeviceConnect(device: MIDIInputDevice) {
-    const matched = this.state.devices.find((d) => d.id === device.id);
-    if (matched !== undefined) { return; }
-    // Append to device list if the port is a input device.
-    const devices = this.state.devices;
-    this.state.devices = [...devices, device];
-    // If the activeDevice does not exist.
-    if (this.state.activeDevice === undefined) {
-      this.state.activeDevice = device;
-      device.attach();
-      device.keys.subscribe((keys) => { this.state.pressed = keys; });
-      device.pedal.subscribe((pedal) => { this.state.pedal = pedal; });
-    }
-  }
-
-  /**
-   * The callback function for device disconnected.
-   * @param device The MIDI device.
-   */
-  private onDeviceDisconnect(device: MIDIInputDevice) {
-    // Remove the device from the list of devices if the port is a input device.
-    const devices = this.state.devices;
-    this.state.devices = devices.filter((d) => d.id !== device.id);
-    // Set the activeDevice to undefined if the id matched.
-    if (device.id === this.state.activeDevice?.id) {
-      this.state.activeDevice.distatch();
-      this.state.activeDevice = undefined;
     }
   }
 
@@ -130,16 +84,67 @@ export default class MIDIDeviceStore {
 
   /**
    * Change the activeDevice activily.
-   * @param device Any MIDI device.
+   * @param device Any MIDI input device.
    */
   changeDevice(device: MIDIInputDevice) {
+    // Do nothing if device is the same as activeDevice.
     if (this.state.activeDevice?.id === device.id) { return; }
+    // Detach the current active device.
     if (this.state.activeDevice !== undefined) {
-      this.state.activeDevice.distatch();
+      this.detachDevice(this.state.activeDevice);
     }
     this.state.activeDevice = device;
+    this.attachDevice(device);
+  }
+
+  /**
+   * The callback function for new device connected.
+   * @param device The new MIDI input device.
+   */
+  private onDeviceConnect(device: MIDIInputDevice) {
+    // Check the device is not existing in the current device list.
+    const matched = this.state.devices.find((d) => d.id === device.id);
+    if (matched !== undefined) { return; }
+    // Append it to the list.
+    const devices = this.state.devices;
+    this.state.devices = [...devices, device];
+    // If the activeDevice does not exist.
+    if (this.state.activeDevice === undefined) {
+      this.state.activeDevice = device;
+      this.attachDevice(device);
+    }
+  }
+
+  /**
+   * The callback function for device disconnected.
+   * @param device The MIDI input device.
+   */
+  private onDeviceDisconnect(device: MIDIInputDevice) {
+    // Remove the device from the list of devices if the port is a input device.
+    const devices = this.state.devices;
+    this.state.devices = devices.filter((d) => d.id !== device.id);
+    // Set the activeDevice to undefined if the id matched.
+    if (device.id === this.state.activeDevice?.id) {
+      this.detachDevice(this.state.activeDevice);
+      this.state.activeDevice = undefined;
+    }
+  }
+
+  /**
+   * Attach a new MIDIInputDevice to subscribe the key events.
+   * @param device Any MIDIInputDevice which is not currently attached.
+   */
+  private attachDevice(device: MIDIInputDevice) {
     device.attach();
     device.keys.subscribe((keys) => { this.state.pressed = keys; });
     device.pedal.subscribe((pedal) => { this.state.pedal = pedal; });
+  }
+
+  /**
+   * Detach a attached MIDIInputDevice and unsubscribe all key changes on it.
+   * @param device A MIDI input device which is currently attached.
+   */
+  private detachDevice(device: MIDIInputDevice) {
+    device.distatch();
   }
 }

@@ -49,10 +49,35 @@ export default class MIDIKeyboardDevice implements MIDIInputDevice {
   private attached = false;
 
   constructor(
-    readonly id: string,
-    readonly name: string,
-    readonly manufacturer: string, private device: WebMidi.MIDIInput,
+    private device: WebMidi.MIDIInput,
+  // eslint-disable-next-line no-empty-function
   ) {}
+
+  /**
+   * The device id.
+   */
+  get id(): string { return this.device.id; }
+
+  /**
+   * The device name.
+   * Returns "unknown" if the device name is not set.
+   */
+  get name(): string { return this.device.name || 'unknown'; }
+
+  /**
+   * The device manufacturer.
+   * Returns "unknown" if the device manufacturer is not set.
+   */
+  get manufacturer(): string { return this.device.manufacturer || 'unknown'; }
+
+  /**
+   * The factory method which creates a new MIDIKeyboardDevice.
+   * @param device The native MIDI input device.
+   * @return A new MIDIKeyboardDevice.
+   */
+  static create(device: WebMidi.MIDIInput): MIDIKeyboardDevice {
+    return new MIDIKeyboardDevice(device);
+  }
 
   /**
    * Attach the device and add a listener for subscribing the MIDI messages.

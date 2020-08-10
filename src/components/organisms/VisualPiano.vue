@@ -129,6 +129,7 @@ export default defineComponent({
       pressed: [] as Array<string | number | MIDIKeyTouch>,
     });
 
+    // Change the inner state reactively.
     watch(() => [props.pressed, props.pedal], ([pressed, pedal]) => {
       // The workaround for getting correct type from mixed array.
       const lPressed = pressed as Array<string | number | MIDIKeyTouch>;
@@ -140,13 +141,14 @@ export default defineComponent({
       }
     });
 
-    const isPressed = (xs: string[]): boolean => {
-      const ys: string[] = state.pressed.map((key) => {
+    // The function to determine if the given keys are pressed.
+    const isPressed = (keys: string[]): boolean => {
+      const pressed: string[] = state.pressed.map((key) => {
         if (typeof key === 'string') { return key; }
         if (typeof key === 'number') { return key.toString(); }
         return key.note.toString();
       });
-      return intersect(xs, ys).length !== 0;
+      return intersect(keys, pressed).length !== 0;
     };
     return {
       state, keyData, isPressed,
