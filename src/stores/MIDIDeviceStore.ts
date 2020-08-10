@@ -1,4 +1,5 @@
 import { reactive } from '@vue/composition-api';
+import { Subscription } from 'rxjs';
 import MIDIKeyboardDevice from '@/models/MIDIKeyboardDevice';
 import { MIDIKeyTouch } from '@/models/MIDIKeyTouch';
 import { MIDIInputDevice } from '@/models/MIDIInputDevice';
@@ -16,6 +17,8 @@ export default class MIDIDeviceStore {
   });
 
   private midiAccess: WebMidi.MIDIAccess | undefined = undefined;
+
+  private subscription: Subscription | undefined = undefined;
 
   /**
    * The event listener for listening the state changes of devices.
@@ -132,12 +135,20 @@ export default class MIDIDeviceStore {
 
   /**
    * Attach a new MIDIInputDevice to subscribe the key events.
+   * Note that you should detach the device which is currently attached
+   * before attaching new device.
    * @param device Any MIDIInputDevice which is not currently attached.
    */
   private attachDevice(device: MIDIInputDevice) {
     device.attach();
-    device.keys.subscribe((keys) => { this.state.pressed = keys; });
-    device.pedal.subscribe((pedal) => { this.state.pedal = pedal; });
+    const subscription = new Subscription();
+    subscription.add(
+      device.keys.subscribe((keys) => { this.state.pressed = keys; }),
+    );
+    subscription.add(
+      device.pedal.subscribe((pedal) => { this.state.pedal = pedal; }),
+    );
+    this.subscription = subscription;
   }
 
   /**
@@ -145,6 +156,10 @@ export default class MIDIDeviceStore {
    * @param device A MIDI input device which is currently attached.
    */
   private detachDevice(device: MIDIInputDevice) {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = undefined;
+    }
     device.detach();
   }
 }
