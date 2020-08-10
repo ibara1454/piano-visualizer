@@ -1,12 +1,19 @@
 <template>
   <div :class="$style.page">
     <!-- Error message -->
-    <div v-if="state.error">
-      <AlertMessage
-        warning
-        :message="state.error">
-      </AlertMessage>
-    </div>
+    <transition
+      appear
+      :appear-class="$style.appear"
+      :appear-to-class="$style['appear-to']"
+      :appear-active-class="$style['appear-active']"
+    >
+      <div v-if="state.error">
+        <AlertMessage
+          warning
+          :message="state.error">
+        </AlertMessage>
+      </div>
+    </transition>
 
     <PageBlock>
       <VisualPiano :pressed="state.pressed" :pedal="state.pedal" />
@@ -52,4 +59,17 @@ export default defineComponent({
 .page > * {
   margin: $medium-space 0;
 }
+
+.appear {
+  transform: translateY(5px);
+}
+
+.appear-to {
+  transform: translateY(0);
+}
+
+.appear-active {
+  transition: all .8s ease-out;
+}
+
 </style>
