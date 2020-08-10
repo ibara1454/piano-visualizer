@@ -145,6 +145,6 @@ export default class MIDIDeviceStore {
    * @param device A MIDI input device which is currently attached.
    */
   private detachDevice(device: MIDIInputDevice) {
-    device.distatch();
+    device.detach();
   }
 }

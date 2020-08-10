@@ -92,9 +92,9 @@ export default class MIDIKeyboardDevice implements MIDIInputDevice {
   }
 
   /**
-   * Distatch the device and remove all listeners from it.
+   * Detach the device and remove all listeners from it.
    */
-  distatch(): void {
+  detach(): void {
     if (this.attached === true) {
       this.device.removeEventListener('midimessage', this.listener);
       this.#keys.complete();

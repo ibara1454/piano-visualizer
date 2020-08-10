@@ -10,7 +10,7 @@ export interface MIDIDevice {
 
   attach(): void;
 
-  distatch(): void;
+  detach(): void;
 }
 
 export interface MIDIInputDevice extends MIDIDevice {
